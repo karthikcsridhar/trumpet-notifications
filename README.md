@@ -70,3 +70,8 @@ Trumpet.init(
 | notySettings | Object: If using NotyJS, you can customize the settings for Noty. Refer [here](http://ned.im/noty/options.html) for options available |
 | responsePayloadStructure | Object: Trumpet needs to understand the response payload from your server for title, message, notificationType, timestamp fields. Also the type field must be one among the supported types : alert, info, warning, success, error. Other types will styll work but will have no colors or styling to it. |
 
+
+
+## Server-Sent-Events (SSE) - Use
+
+Coming soon!
