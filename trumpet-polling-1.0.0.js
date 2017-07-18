@@ -5,7 +5,7 @@
  * @author   Karthik Chengayan Sridhar (<https://github.com/karthikcsridhar>)
  * @version  1.0.0
  * @license  MIT
- * @see      <http://radlikewhoa.github.io/Countable/>
+ * @see      <https://github.com/karthikcsridhar/trumpet-notifications>
  */
 
 
