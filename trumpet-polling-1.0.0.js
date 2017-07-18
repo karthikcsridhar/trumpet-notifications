@@ -22,7 +22,8 @@
         position,
         responsePayloadStructure,
         libraryName = 'Trumpet',
-        localStorageKeyPrefix = 'trumpet:';
+        localStorageKeyPrefix = 'trumpet:',
+        initiated = false;
 
     //defaults
     const DEFAULTS = {
@@ -173,19 +174,19 @@
 
     function validateOptions() {
         if (notificationsEndpoint !== '' && !notificationsEndpoint) {
-            throw new Error(libraryName + " requires a notificationsEndpoint to GET notifications from.");
+            console.error(libraryName + " requires a notificationsEndpoint to GET notifications from.");
         }
 
         if (pollInterval && (pollInterval < 0 || pollInterval.constructor !== Number)) {
-            throw new Error(libraryName + " can only accept a positive integer as pollInterval.");
+            console.error(libraryName + " can only accept a positive integer as pollInterval.");
         }
 
         if (callback && callback.constructor !== Function) {
-            throw new Error(libraryName + " can only accept a function as callback.");
+            console.error(libraryName + " can only accept a function as callback.");
         }
 
         if (useNoty && !global.Noty) {
-            throw new Error(libraryName + " - You have asked to use the NotyJS plugin, but it is not found. Please make sure to include it before Trumpet plugin. Else disable Noty.");
+            console.error(libraryName + " - You have asked to use the NotyJS plugin, but it is not found. Please make sure to include it before Trumpet plugin. Else disable Noty.");
         }
     }
 
@@ -243,6 +244,8 @@
 
                     setToLs(localStorageKeyPrefix + id, notification); // Store to Local Storge so that duplicate notifications are not shown
 
+                    newNotifications.push(notification);
+
                     displayNotification(notification);
 
                 }
@@ -250,6 +253,11 @@
             }
 
         }
+
+        if (callback && callback.constructor === Function) {
+            callback(newNotifications);
+        }
+
     }
 
     function displayNotification(notification) {
@@ -388,17 +396,35 @@
     //publicly exposed methods
     const Trumpet = {
 
+        /**
+         * `init` initializes the library properties and initiates the data pull.
+         * Errors are logged to the console as errors, but Trumpet fails silently.
+         *
+         * @private
+         *
+         * @param   {Object}     options  options that define the library properties
+         *                                - serverBaseUrl               :   API base URL
+         *                                - notificationsEndpoint       :   Endpoint to fetch notifications 
+         *                                - endpointHeaders             :   Headers. Ex: JWT token, SSO Cookie
+         *                                - pollIntervalInSecs          :   Interval between HTTP polls
+         *                                - callback                    :   callback function to handle response data
+         *                                - position                    :   position, where notifications will be shown. options: top, topRight, topLeft, bottom, bottomRight, bottomLeft
+         *                                - useNoty                     :   Boolean - true/false. Whether to use NotyJS library to display notifications. If true Noty must be included before Trumpet
+         *                                - notySettings                :   Object - settings for NotyJS
+         *                                - responsePayloadStructure    :   Object - define the key names for title, message, type, timestamp fields from the API
+         */
+
         init: function (options) {
             //initialize properties
-            serverBaseUrl = options.serverBaseUrl || DEFAULTS.serverBaseUrl;
-            notificationsEndpoint = options.notificationsEndpoint || DEFAULTS.notificationsEndpoint;
-            endpointHeaders = options.endpointHeaders;
-            pollInterval = options.pollIntervalInSecs * 1000 || DEFAULTS.pollInterval;
-            callback = options.callback;
-            position = options.position;
-            useNoty = options.useNoty || DEFAULTS.useNoty;
-            notySettings = options.notySettings || DEFAULTS.notySettings;
-            responsePayloadStructure = options.responsePayloadStructure || DEFAULTS.responsePayloadStructure;
+            serverBaseUrl = options.serverBaseUrl || serverBaseUrl || DEFAULTS.serverBaseUrl;
+            notificationsEndpoint = options.notificationsEndpoint || notificationsEndpoint || DEFAULTS.notificationsEndpoint;
+            endpointHeaders = options.endpointHeaders || endpointHeaders;
+            pollInterval = options.pollIntervalInSecs * 1000 || pollInterval || DEFAULTS.pollInterval;
+            callback = options.callback || callback;
+            position = options.position || position;
+            useNoty = options.useNoty || useNoty || DEFAULTS.useNoty;
+            notySettings = options.notySettings || notySettings || DEFAULTS.notySettings;
+            responsePayloadStructure = options.responsePayloadStructure || responsePayloadStructure || DEFAULTS.responsePayloadStructure;
 
             validateOptions();
 
@@ -407,11 +433,28 @@
                 setStyle();
             }
 
-            getNotifications();
+            if (!initiated) {
+                initiated = true;
+                getNotifications();
+            }
         }
 
     };
 
-    global.Trumpet = Trumpet;
+
+    /**
+     * Expose Trumpet depending on the module system used across the
+     * application. ( CommonJS, AMD, global)
+     */
+
+    if (typeof exports === 'object') {
+        module.exports = Trumpet
+    } else if (typeof define === 'function' && define.amd) {
+        define(function () {
+            return Trumpet
+        })
+    } else {
+        global.Trumpet = Trumpet
+    }
 
 })(this);
