@@ -33,7 +33,7 @@
         responsePayloadStructure: {
             titleField: 'title',
             messageField: 'message',
-            notificationTypeField: 'notificationType',
+            notificationTypeField: 'type',
             timeStampField: 'timestamp'
         },
         useNoty: false,
@@ -343,10 +343,10 @@
             firstAfterBody = document.createElement("div");
             document.body.insertBefore(firstAfterBody, document.body.firstChild);
             parentElement = firstAfterBody;
-        }
 
-        if (position)
-            parentElement.classList.add('trumpet-notif-' + position);
+            if (position)
+                parentElement.classList.add('trumpet-notif-' + position);
+        }
 
     }
 
