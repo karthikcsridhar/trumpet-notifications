@@ -62,13 +62,13 @@ Trumpet.init(
 | --- | --- |
 | serverBaseUrl | String: Server API base URL. Ex: "https://MY-API/" or for relative path: "./" |
 | notificationsEndpoint | String: Endpoint to fetch notifications  Ex: "api/notifications/getUserNotifications" |
-| endpointHeaders | Object: Header values |
-| pollIntervalInSecs | Number: How often to poll the server, in seconds.  |
-| callback | Function: If you want to handle the response, pass a callback function |
-| position | String : Position of the notifications. Applies only when useNoty is false(default), since Noty has its position set in notySettings. Options: top, topRight, topLeft, bottom, bottomRight, bottomLeft |
-| useNoty | Boolean: true/false. If you wish to use NotyJS plugin, set this flag to true |
-| notySettings | Object: If using NotyJS, you can customize the settings for Noty. Refer [here](http://ned.im/noty/options.html) for options available |
-| responsePayloadStructure | Object: Trumpet needs to understand the response payload from your server for title, message, notificationType, timestamp fields. Also the type field must be one among the supported types : alert, info, warning, success, error. Other types will styll work but will have no colors or styling to it. |
+| endpointHeaders | Object (optional): Header values |
+| pollIntervalInSecs | Number (optional. default is 10 secs): How often to poll the server, in seconds.  |
+| callback | Function  (optional): If you want to handle the response, pass a callback function |
+| position | String  (optional, default is topRight): Position of the notifications. Applies only when useNoty is false(default), since Noty has its position set in notySettings. Options: top, topRight, topLeft, bottom, bottomRight, bottomLeft |
+| useNoty | Boolean  (optional, default is false): true/false. If you wish to use NotyJS plugin, set this flag to true |
+| notySettings | Object (optional, default settings is shown above): If using NotyJS, you can customize the settings for Noty. Refer [here](http://ned.im/noty/options.html) for options available |
+| responsePayloadStructure | Object (optional, default fields are shown above): Trumpet needs to understand the response payload from your server for title, message, notificationType, timestamp fields. Also the type field must be one among the supported types : alert, info, warning, success, error. Other types will styll work but will have no colors or styling to it. |
 
 
 
