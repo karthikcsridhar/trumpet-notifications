@@ -1,6 +1,6 @@
 /**
  * Trumpet - Polling is a lightweight browser library written in vanilla JS for pushing notifications using
- * short polling technique
+ * short polling, sse or websockets technique
  *
  * @author   Karthik Chengayan Sridhar (<https://github.com/karthikcsridhar>)
  * @version  1.0.0
@@ -156,16 +156,22 @@
 
     //private methods
 
-    // store shown notifications in localStorage to not show duplicate ones. 
-    // still logic needs to be handled at the server side to not include older notifications 
-    // in the response for the current user
+    /**
+     * store shown notifications in localStorage to not show duplicate ones. 
+     * still logic needs to be handled at the server side to not include older notifications 
+     * in the response for the current user
+     **/ 
+
     function setToLs(key, value) {
         if (window.localStorage) {
             localStorage.setItem(key, value);
         }
     }
 
-    // retrieves value given a key from local storage
+    /**
+     * retrieves value given a key from local storage
+     **/
+
     function getFromLs(key) {
         if (window.localStorage) {
             return localStorage.getItem(key);
@@ -211,23 +217,22 @@
 
             var endpoint = serverBaseUrl + notificationsEndpoint;
 
-            // if (endpoint.indexOf('http') > -1) {
-            //     endpoint = endpoint.replace('http', 'ws');
-            // } else if (endpoint.indexOf('https') > -1) {
-            //     endpoint = endpoint.replace('https', 'wss');
-            // }
-
             var socket = io.connect(endpoint);
-            socket.emit('trumpet', {
-                message: 'Hey, I have an important message!'
+
+            /* socket.emit('trumpet', {
+                message: 'Hey, I just connected!'
+            }); */
+
+            socket.on('error', function (err) {
+                console.error(err);
             });
 
             socket.on('trumpet', function (data) {
                 massageNotifications(data);
             });
 
-
         } else {
+
             var xhr = new XMLHttpRequest(),
                 endpoint = notificationsEndpoint + "?ts=" + new Date().getTime();
 
@@ -340,8 +345,6 @@
         notification.close = close;
         notification.node = notificationContainer;
 
-        //notifications.push(notification);
-
         parentElement.appendChild(notification.node);
 
         notification.close.addEventListener("click", function () {
@@ -351,7 +354,6 @@
             container.parentNode.removeChild(container);
 
         });
-
 
     }
 
@@ -381,8 +383,11 @@
             document.body.insertBefore(firstAfterBody, document.body.firstChild);
             parentElement = firstAfterBody;
 
-            if (position)
-                parentElement.classList.add('trumpet-notif-' + position);
+        if (position)
+            parentElement.classList.add('trumpet-notif-' + position);
+        else
+            parentElement.classList.add('trumpet-notif-topRight');
+
         }
 
     }
@@ -427,8 +432,6 @@
             sheet.addRule(selector, rules, index);
         }
     }
-
-    //public members
 
     //publicly exposed objects
     const Trumpet = {
@@ -484,7 +487,6 @@
         }
 
     };
-
 
     /**
      * Expose Trumpet depending on the module system used across the
