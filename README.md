@@ -1,5 +1,5 @@
 # trumpet-notifications
-A Javascript notification library for the browser. Separate libraries available for Short-Polling &amp; Server Sent Events techniques. (Library for SSE will be uploaded soon)
+A Javascript notification library for the browser.This library supports Short-Polling, Server Sent Events & WebSockets techniques.
 
 This library also supports [NotyJS](http://ned.im/noty/) library. It is NOT a requirement, however it can be used if preferred. NotyJS supports [MoJS](http://mojs.io/) animation library for show/hide animations. NotyJS can be used with or without moJS in Trumpet.
 
@@ -12,7 +12,7 @@ This library also supports [NotyJS](http://ned.im/noty/) library. It is NOT a re
     <script src="./js/trumpet-polling-1.0.0.js"></script>                     <!-- Include the TrumpetJS library -->
 ```
 
-## Short-Polling - Use
+## Use
 ```
 Trumpet.init(options);
 ```
@@ -52,7 +52,8 @@ Trumpet.init(
             messageField: 'message',
             notificationTypeField: 'type',
             timeStampField: 'timestamp'
-        }
+        },
+     "apiType" : Trumpet.API_TYPE.SHORT_POLLING
 }
 );
 ```
@@ -69,9 +70,6 @@ Trumpet.init(
 | useNoty | Boolean  (optional, default is false): true/false. If you wish to use NotyJS plugin, set this flag to true |
 | notySettings | Object (optional, default settings is shown above): If using NotyJS, you can customize the settings for Noty. Refer [here](http://ned.im/noty/options.html) for options available |
 | responsePayloadStructure | Object (optional, default fields are shown above): Trumpet needs to understand the response payload from your server for title, message, notificationType, timestamp fields. Also the type field must be one among the supported types : alert, info, warning, success, error. Other types will styll work but will have no colors or styling to it. |
+| apiType | Number (optional, default is Trumpet.API_TYPE.SHORT_POLLING): Specify one of the supported API types. Options: Trumpet.API_TYPE.SHORT_POLLING, Trumpet.API_TYPE.SSE, Trumpet.API_TYPE.SHORT_POLLING, API_TYPE.WEB_SOCKET (WebSocket requires [socket.io](https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js) client library )  |
 
 
-
-## Server-Sent-Events (SSE) - Use
-
-Coming soon!
