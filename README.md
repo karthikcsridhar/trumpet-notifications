@@ -58,6 +58,25 @@ Trumpet.init(
 );
 ```
 
+### API response format:
+```
+{
+        "f3a7a413-c267-4d83-9d04-d00f759ffb5c": {
+            "title": "Success!",
+            "type": "success",
+            "message": "This is a info notification for myApp",
+            "timestamp": 1412103600000
+        },
+        "fac0bac8-25e1-4e19-8e82-fa2581bf54d0": {
+            "title": "Alert!",
+            "type": "alert",
+            "message": "This is an alert notification for myApp",
+            "timestamp": 1412103600000
+        }
+}
+```
+
+
 
 | Property | Meaning |
 | --- | --- |
