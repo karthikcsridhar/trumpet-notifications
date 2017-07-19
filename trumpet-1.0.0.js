@@ -23,11 +23,12 @@
         responsePayloadStructure,
         libraryName = 'Trumpet',
         localStorageKeyPrefix = 'trumpet:',
-        initiated = false;
+        initiated = false,
+        apiType;
 
     //defaults
     const DEFAULTS = {
-        serverBaseUrl: 'http://localhost:3000/',
+        serverBaseUrl: 'http://localhost:3001/',
         notificationsEndpoint: '',
         pollInterval: 10 * 1000, //Every 10 seconds
         responsePayloadStructure: {
@@ -188,40 +189,76 @@
         if (useNoty && !global.Noty) {
             console.error(libraryName + " - You have asked to use the NotyJS plugin, but it is not found. Please make sure to include it before Trumpet plugin. Else disable Noty.");
         }
+
+        if (apiType === Trumpet.API_TYPE.WEB_SOCKET && !global.io) {
+            console.error(libraryName + " - requires socket.io to support websockets.");
+        }
     }
 
     function getNotifications() {
 
-        var xhr = new XMLHttpRequest(),
-            endpoint = notificationsEndpoint + "?ts=" + new Date().getTime();
+        if (apiType == Trumpet.API_TYPE.SSE) {
 
-        // add header values if required. Example: jwt token or cookies required to complete the request
-        if (endpointHeaders) {
-            for (var key in endpointHeaders) {
-                if (endpointHeaders.hasOwnProperty(key)) {
-                    xhr.setRequestHeader(key, endpointHeaders[key]);
+            var endpoint = serverBaseUrl + notificationsEndpoint;
+
+            let eventSource = new EventSource(endpoint);
+
+            eventSource.addEventListener('trumpet', (e) => {
+                massageNotifications(JSON.parse(e.data));
+            });
+
+        } else if (apiType === Trumpet.API_TYPE.WEB_SOCKET) {
+
+            var endpoint = serverBaseUrl + notificationsEndpoint;
+
+            // if (endpoint.indexOf('http') > -1) {
+            //     endpoint = endpoint.replace('http', 'ws');
+            // } else if (endpoint.indexOf('https') > -1) {
+            //     endpoint = endpoint.replace('https', 'wss');
+            // }
+
+            var socket = io.connect(endpoint);
+            socket.emit('trumpet', {
+                message: 'Hey, I have an important message!'
+            });
+
+            socket.on('trumpet', function (data) {
+                massageNotifications(data);
+            });
+
+
+        } else {
+            var xhr = new XMLHttpRequest(),
+                endpoint = notificationsEndpoint + "?ts=" + new Date().getTime();
+
+            // add header values if required. Example: jwt token or cookies required to complete the request
+            if (endpointHeaders) {
+                for (var key in endpointHeaders) {
+                    if (endpointHeaders.hasOwnProperty(key)) {
+                        xhr.setRequestHeader(key, endpointHeaders[key]);
+                    }
                 }
             }
+
+            xhr.open("GET", endpoint, true);
+            xhr.onload = function () {
+
+                massageNotifications(JSON.parse(xhr.responseText));
+
+                // stop trumpeting by setting this flag
+                if (!global.stopTrumpeting) {
+
+                    // Poll the server for notifications.
+                    setTimeout(function () {
+                        getNotifications();
+                    }, pollInterval);
+
+                }
+
+            };
+
+            xhr.send();
         }
-
-        xhr.open("GET", endpoint, true);
-        xhr.onload = function () {
-
-            massageNotifications(JSON.parse(xhr.responseText));
-
-            // stop trumpeting by setting this flag
-            if (!global.stopTrumpeting) {
-
-                // Poll the server for notifications.
-                setTimeout(function () {
-                    getNotifications();
-                }, pollInterval);
-
-            }
-
-        };
-
-        xhr.send();
 
     }
 
@@ -393,7 +430,7 @@
 
     //public members
 
-    //publicly exposed methods
+    //publicly exposed objects
     const Trumpet = {
 
         /**
@@ -425,6 +462,7 @@
             useNoty = options.useNoty || useNoty || DEFAULTS.useNoty;
             notySettings = options.notySettings || notySettings || DEFAULTS.notySettings;
             responsePayloadStructure = options.responsePayloadStructure || responsePayloadStructure || DEFAULTS.responsePayloadStructure;
+            apiType = options.apiType || Trumpet.API_TYPE.HTTP_SHORT_POLLING;
 
             validateOptions();
 
@@ -437,6 +475,12 @@
                 initiated = true;
                 getNotifications();
             }
+        },
+
+        API_TYPE: {
+            HTTP_SHORT_POLLING: 0,
+            SSE: 1,
+            WEB_SOCKET: 2
         }
 
     };
@@ -457,4 +501,4 @@
         global.Trumpet = Trumpet
     }
 
-})(this);
+})(window);
