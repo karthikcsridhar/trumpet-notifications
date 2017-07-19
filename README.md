@@ -62,15 +62,15 @@ Trumpet.init(
 ```
 {
         "f3a7a413-c267-4d83-9d04-d00f759ffb5c": {
-            "title": "Success!",
-            "type": "success",
-            "message": "This is a info notification for myApp",
+            "title": "Warning!",
+            "type": "warning",
+            "message": "Application will be down for 2 hours due to maintenance. Save your work.",
             "timestamp": 1412103600000
         },
         "fac0bac8-25e1-4e19-8e82-fa2581bf54d0": {
             "title": "Alert!",
             "type": "alert",
-            "message": "This is an alert notification for myApp",
+            "message": "This is an alert.",
             "timestamp": 1412103600000
         }
 }
