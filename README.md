@@ -9,7 +9,7 @@ This library also supports [NotyJS](http://ned.im/noty/) library. It is NOT a re
     <link rel="stylesheet" type="text/css" href="./css/vendor/noty.css" />    <!-- Optionally Include CSS for NotyJS if you wish to use NotyJS -->
     <script src="./js/vendor/mo.min.js"></script>                             <!-- Optionally include mojs animation library if you wish to have fancy show/hide animations for your NotyJS notifications-->
     
-    <script src="./js/trumpet-polling-1.0.0.js"></script>                     <!-- Include the TrumpetJS library -->
+    <script src="./js/trumpet-1.0.0.js"></script>                     <!-- Include the TrumpetJS library -->
 ```
 
 ## Use
