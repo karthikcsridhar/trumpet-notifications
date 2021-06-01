@@ -67,6 +67,8 @@ let options = {
 ```
 
 ### API response format:
+Make sure your notifications backend API returns data in this format. The field names are self explanatory.
+
 ```
 {
         "f3a7a413-c267-4d83-9d04-d00f759ffb5c": {
