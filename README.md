@@ -67,7 +67,7 @@ let options = {
 ```
 
 ### API response format:
-Make sure your notifications backend API returns data in this format. The field names are self explanatory.
+Make sure your notifications backend API returns data in this format. The property names are self explanatory. If your property names are different, you can tell the library the name of your corresponding properties using the "options" (above) via "responsePayloadStructure" property.
 
 ```
 {
