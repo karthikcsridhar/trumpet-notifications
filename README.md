@@ -29,8 +29,7 @@ Trumpet.init(options);
 
 ### options
 ```
-Trumpet.init(
-{
+let options = {
     "serverBaseUrl" : "http://localhost:3000/",
     "notificationsEndpoint" : "api/notifications/getUserNotifications",
     "endpointHeaders" : {
