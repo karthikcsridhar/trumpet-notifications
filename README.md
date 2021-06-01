@@ -13,6 +13,15 @@ This library also supports [NotyJS](http://ned.im/noty/) library. It is NOT a re
 ```
 
 ## Use
+HTML:
+(This is **optional** if you want to display the notifications in a particular location of the page for customization. If this container is not present on the HTML, then the notification will be shown at the top of the page as the first item of the HTML body.
+
+```
+<div id="trumpet-container"></div> 
+```
+
+
+JavaScript:
 ```
 Trumpet.init(options);
 ```
